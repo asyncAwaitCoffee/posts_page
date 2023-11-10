@@ -1,10 +1,11 @@
 <template>
     <div class="navbar">
-        <div @click="$router.push('/')">whaaaa?</div>
+        <div @click="$router.push('/')" class="cursor-pointer">Vue.js</div>
         <div class="navbar__btns">
-            <my-button @click="$router.push('/posts')">Посты тут</my-button>
-            <my-button @click="$router.push('/about')" style="margin-left: 10px;">О чём-то тут</my-button>
-            <my-button @click="$router.push('/store')" style="margin-left: 10px;">Это store</my-button>
+            <my-button @click="$router.push('/about')" style="margin-left: 10px;">About</my-button>
+            <my-button @click="$router.push('/posts')">Vue</my-button>
+            <my-button @click="$router.push('/store')" style="margin-left: 10px;">Vuex</my-button>
+            <my-button @click="$router.push('/composition')" style="margin-left: 10px;">Composition API</my-button>
         </div>
     </div>
 </template>
@@ -25,6 +26,10 @@ export default {
 
 .navbar__btns {
     margin-left: auto;
+}
+
+.cursor-pointer {
+    cursor: pointer;
 }
     
 </style>

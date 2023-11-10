@@ -1,24 +1,20 @@
 <template>
     <div>
-        <h1> {{ $store.getters.doubleLikes }}</h1>
-        <h1> {{ $store.state.isAuth ? "Привет, юзер!" : "Залогиньтесь" }}</h1>
-        <div>
-            <my-button @click="$store.commit('incrementLikes')">Like</my-button>
-            <my-button @click="$store.commit('decrementLikes')">Dislike</my-button>
-        </div>
-        <h1>Страница со всякими штуками</h1>
+        <h1>Page with posts (Vuex)</h1>
         <my-input
             v-focus
-            v-model="searchQuery"
-            placeholder="поискать"
+            :model-value="searchQuery"
+            @update:model-value="setSearchQuery"
+            placeholder="Search"
         />
         <div class="app__btns">
             <my-button
                 @click="showDialog">
-                Вызвать добавлялку
+                Add post
             </my-button>
             <my-select
-                v-model="selectedSort"
+                :model-value="selectedSort"
+                @update:model-value="setSelectedSort"
                 :options="sortOptions"
             />
         </div>
@@ -32,8 +28,8 @@
             @remove="removePost"
             v-if="!isLoading"
         />
-        <div v-else>Посты загружаются, ждём</div>
-<!--    <div class="page__wrapper">
+        <div v-else>Loading...</div>
+    <!-- <div class="page__wrapper"> 
             <div
                 v-for="pageNumber in totalPages"
                 :key="pageNumber"
@@ -46,9 +42,8 @@
                 {{ pageNumber }}
             </div>
         </div> -->
-<!--    <div ref="observer" class="observer"></div> -->
-        <div v-intersection="fetchMorePosts" :totalPages="totalPages" :page="page" class="observer"></div>
-
+    <div v-intersection="fetchMorePosts" class="observer"></div>
+    
     </div>
 </template>
 
@@ -56,6 +51,7 @@
 
     import PostForm from '@/components/PostForm.vue'
     import PostList from '@/components/PostList.vue'
+    import {mapActions, mapGetters, mapMutations, mapState} from 'vuex'
 
     export default {
         components: {
@@ -63,21 +59,19 @@
         },
         data() {
             return {
-                posts: [],
                 dialogVisible: false,
-                isLoading: true,
-                selectedSort: '',
-                sortOptions: [
-                    {value: 'title', name: 'По названию'},
-                    {value: 'body', name: 'По содержимому'},
-                ],
-                searchQuery: '',
-                page: 1,
-                limit: 10,
-                totalPages: 0,
             }
         },
         methods: {
+            ...mapMutations({
+                setPage: 'post/setPage',
+                setSearchQuery: 'post/setSearchQuery',
+                setSelectedSort: 'post/setSelectedSort'
+            }),
+            ...mapActions({
+                fetchPosts: 'post/fetchPosts',
+                fetchMorePosts: 'post/fetchMorePosts'
+            }),
             createPost(post) {
                 this.posts.push(post)
                 this.dialogVisible = false
@@ -88,64 +82,27 @@
             showDialog() {
                 this.dialogVisible = true
             },
-            fetchPosts() {
-                this.isLoading = true
-                fetch(`https://jsonplaceholder.typicode.com/posts?_limit=${this.limit}&_page=${this.page}`)
-                    .then(
-                        res => {
-                            this.totalPages = Math.ceil(res.headers.get('x-total-count') / this.limit)
-                            return res.json()
-                        })
-                    .then(
-                        data => {
-                            this.posts = data
-                        })
-                    .catch(error => console.error(error))
-                    .finally(() => this.isLoading = false)
-            },
-            fetchMorePosts() {
-                this.page++
-                fetch(`https://jsonplaceholder.typicode.com/posts?_limit=${this.limit}&_page=${this.page}`)
-                    .then(
-                        res => {
-                            this.totalPages = Math.ceil(res.headers.get('x-total-count') / this.limit)
-                            return res.json()
-                        })
-                    .then(
-                        data => {
-                            this.posts = [...this.posts, ...data]
-                        })
-                    .catch(error => console.error(error))
-            },
-/*
-            changePage(pageNumber) {
-                this.page = pageNumber
-            }
-*/
         },
         mounted() {
             this.fetchPosts()
         },
         computed: {
-            sortedPosts() {
-                return [...this.posts].sort((post1, post2) => post1[this.selectedSort]?.localeCompare(post2[this.selectedSort]))
-            },
-            sortedAndSearchedPosts() {
-                return this.sortedPosts.filter(post => post.title.toLowerCase().includes(this.searchQuery.toLowerCase()))
-            }
+            ...mapState({
+                posts: state => state.post.posts,
+                isLoading: state => state.post.isLoading,
+                selectedSort: state => state.post.selectedSort,
+                sortOptions: state => state.post.sortOptions,
+                searchQuery: state => state.post.searchQuery,
+                page: state => state.post.page,
+                limit: state => state.post.limit,
+                totalPages: state => state.post.totalPages,
+            }),
+            ...mapGetters({
+                sortedPosts: 'post/sortedPosts',
+                sortedAndSearchedPosts: 'post/sortedAndSearchedPosts'
+            })
         },
         watch: {
-            /*
-            page(newValue) {
-                this.fetchPosts()
-            }
-            selectedSort(newValue) { //у функции наблюдения должно быть то же имя
-                this.posts.sort((post1, post2) => post1[newValue]?.localeCompare(post2[newValue]))
-            },
-            dialogVisible(newValue) {
-                console.log(newValue)
-            }
-            */
         }
     }
 

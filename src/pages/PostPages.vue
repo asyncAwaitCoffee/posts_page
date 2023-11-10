@@ -1,15 +1,15 @@
 <template>
     <div>
-        <h1>Страница со всякими штуками</h1>
+        <h1>Page with posts (Vue)</h1>
         <my-input
             v-focus
             v-model="searchQuery"
-            placeholder="поискать"
+            placeholder="Search"
         />
         <div class="app__btns">
             <my-button
                 @click="showDialog">
-                Вызвать добавлялку
+                Add post
             </my-button>
             <my-select
                 v-model="selectedSort"
@@ -26,22 +26,8 @@
             @remove="removePost"
             v-if="!isLoading"
         />
-        <div v-else>Посты загружаются, ждём</div>
-<!--    <div class="page__wrapper">
-            <div
-                v-for="pageNumber in totalPages"
-                :key="pageNumber"
-                class="page"
-                :class = "{
-                    'current-page': page === pageNumber
-                }"
-                @click="changePage(pageNumber)"
-                >
-                {{ pageNumber }}
-            </div>
-        </div> -->
-<!--    <div ref="observer" class="observer"></div> -->
-        <div v-intersection="fetchMorePosts" :totalPages="totalPages" :page="page" class="observer"></div>
+        <div v-else>Loading</div>
+        <div v-intersection="fetchMorePosts" class="observer"></div>
 
     </div>
 </template>
@@ -62,8 +48,8 @@
                 isLoading: true,
                 selectedSort: '',
                 sortOptions: [
-                    {value: 'title', name: 'По названию'},
-                    {value: 'body', name: 'По содержимому'},
+                    {value: 'title', name: 'By title'},
+                    {value: 'body', name: 'By descr'},
                 ],
                 searchQuery: '',
                 page: 1,

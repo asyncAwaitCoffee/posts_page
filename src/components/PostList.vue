@@ -1,7 +1,7 @@
 <template>
     <!-- v-show вместо v-if не будет убирать элементы из DOM -->
     <div v-if="posts.length > 0">
-        <h3>Список чего-то</h3>
+        <h3>Posts list</h3>
         <transition-group name="post-list">
             <post-item
                 v-for="post in posts"
@@ -11,7 +11,7 @@
             />
         </transition-group>
     </div>
-    <h2 v-else style="color: red;">Ничего нету тут</h2>
+    <h2 v-else style="color: red;">No posts found</h2>
 </template>
 
 <script>

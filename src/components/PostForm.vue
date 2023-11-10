@@ -1,17 +1,17 @@
 <template>
     <form @submit.prevent>
-        <h4>Добавление поста</h4>
+        <h4>New post</h4>
         <my-input
             v-focus
             v-model.trim="post.title"
-            placeholder="Название"/>
+            placeholder="Title"/>
         <my-input
             v-model.trim="post.body"
-            placeholder="Описание"/>
+            placeholder="Description"/>
         <my-button
             @click="createPost"
             style="align-self: flex-end;"
-            class="btn">Добавить пост</my-button>
+            class="btn">Add</my-button>
     </form>
 </template>
 

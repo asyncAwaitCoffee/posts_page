@@ -1,6 +1,6 @@
 <template lang="">
     <div>
-        <h1>Пост с ID = {{ $route.params.id }}</h1>
+        <h1>Post with ID = {{ $route.params.id }}</h1>
     </div>
 </template>
 <script>
