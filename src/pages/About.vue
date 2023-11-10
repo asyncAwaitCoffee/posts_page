@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h3>Обо всём на свете белом</h3>
+        <h3>About page</h3>
     </div>
 </template>
 <script>
